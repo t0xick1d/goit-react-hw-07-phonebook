@@ -1,17 +1,21 @@
 import ItemList from './ItemList';
-import { useDispatch, useSelector } from 'react-redux';
-import { deleteContact } from '../../redux-store/contactsSlice';
+import {
+  useGetContactsQuery,
+  useDeleteContactMutation,
+} from 'redux-store/contactsApi';
+import { useSelector } from 'react-redux';
 
 import style from './NumberList.module.css';
 
 function NumberList() {
-  const list = useSelector(state => state.contacts.contacts);
-  const filter = useSelector(state => state.contacts.filter.toLowerCase());
-  const dispatch = useDispatch();
+  const { data, isLoading } = useGetContactsQuery();
+  const [deleteContact] = useDeleteContactMutation();
 
-  const visibleContact = list
-    ? list.filter(contact => contact.name.toLowerCase().includes(filter))
-    : '';
+  const filter = useSelector(state => state.contacts.filter.toLowerCase());
+
+  const visibleContact = !isLoading
+    ? data.filter(contact => contact.name.toLowerCase().includes(filter))
+    : [];
 
   return (
     <>
@@ -25,7 +29,7 @@ function NumberList() {
               name={e.name}
               number={e.number}
               deleteContact={() => {
-                dispatch(deleteContact(e.id));
+                deleteContact(e.id);
               }}
             />
           );

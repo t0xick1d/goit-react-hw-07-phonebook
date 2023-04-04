@@ -1,7 +1,6 @@
 import { useState, useRef } from 'react';
 import { nanoid } from 'nanoid';
-import { useDispatch } from 'react-redux';
-import { addNumber } from '../../redux-store/contactsSlice';
+import { useAddContactMutation } from 'redux-store/contactsApi';
 
 import style from './ContactForm.module.css';
 
@@ -10,8 +9,7 @@ function FormNumber() {
   const [number, setNumber] = useState('');
   const idName = useRef(nanoid()).current;
   const idNumber = useRef(nanoid()).current;
-
-  const dispatch = useDispatch();
+  const [addContact] = useAddContactMutation();
 
   const onSubmitForm = e => {
     e.preventDefault();
@@ -21,7 +19,7 @@ function FormNumber() {
       name: name,
       number: number,
     };
-    dispatch(addNumber(numberInfo));
+    addContact(numberInfo);
     reset();
   };
   const reset = () => {
