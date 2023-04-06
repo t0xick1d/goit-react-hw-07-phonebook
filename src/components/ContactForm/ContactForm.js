@@ -1,25 +1,35 @@
 import { useState, useRef } from 'react';
 import { nanoid } from 'nanoid';
-import { useAddContactMutation } from 'redux-store/contactsApi';
+import { useDispatch, useSelector } from 'react-redux';
+import { addContact } from 'redux-store/operetions';
 
 import style from './ContactForm.module.css';
 
 function FormNumber() {
+  const item = useSelector(state => state.contacts.contacts.items);
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
   const idName = useRef(nanoid()).current;
   const idNumber = useRef(nanoid()).current;
-  const [addContact] = useAddContactMutation();
+  const dispatch = useDispatch();
 
   const onSubmitForm = e => {
     e.preventDefault();
+
+    const formName = e.currentTarget.name.value;
+    const formNumber = e.currentTarget.number.value;
+
+    if (item.filter(e => e.name === formName).length !== 0) {
+      alert(`${formName}is already in contacts.`);
+      return;
+    }
     const id = nanoid();
     const numberInfo = {
       id,
-      name: name,
-      number: number,
+      name: formName,
+      number: formNumber,
     };
-    addContact(numberInfo);
+    dispatch(addContact(numberInfo));
     reset();
   };
   const reset = () => {

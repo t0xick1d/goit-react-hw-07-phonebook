@@ -4,7 +4,7 @@ import { filterContacts } from '../../redux-store/contactsSlice';
 import style from './Filter.module.css';
 
 function Filter() {
-  const filter = useSelector(state => state.contacts.filter);
+  const filter = useSelector(state => state.contacts.contacts.filter);
   const dispatch = useDispatch();
 
   return (
